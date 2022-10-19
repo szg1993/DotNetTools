@@ -3,13 +3,18 @@ using ExGuard;
 
 try
 {
-    Console.WriteLine("Hello, World!");
+    var mylist = new List<string>();
+    mylist = null;
 
-    var list = new List<string>();
-    list = null;
+    //list.ThrowIfNull("Sziamia!", typeof(DataValidationException));
+    mylist
+        .ThrowIfNull(() => new DataValidationException("csá"))
+        .ThrowIfNull(message: "pot");
+    //.ThrowIfEmpty("");
 
-    list.ThrowIfNull("Sziamia!", typeof(DataValidationException));
+    //int age = 32;
 
+    //age.Throw().IfNegative();
 }
 catch (DataValidationException dve)
 {
