@@ -19,12 +19,12 @@ namespace ExGuard
             throw new ArgumentNullException(DefaultMessages.ArgumentWasNull);
         }
 
-        public static IEnumerable<TValidable> ThrowIfEmpty<TValidable>(
+        public static IEnumerable<TValidable> ThrowIfNullOrEmpty<TValidable>(
             [NotNull] this IEnumerable<TValidable> param,
             Func<Exception> customException = null,
             string message = null)
         {
-            if (param.Any())
+            if (param != null && param.Any())
                 return param;
 
             //throw GetException();
@@ -33,21 +33,21 @@ namespace ExGuard
                 throw customException.Invoke();
 
             if (!string.IsNullOrEmpty(message))
+                throw new ArgumentException(message);
+
+            throw new ArgumentException(DefaultMessages.ArgumentListWasNullOrEmpty);
+        }
+
+        private static Exception GetException(Func<Exception> customException = null, string message = null)
+        {
+            if (customException != null)
+                throw customException.Invoke();
+
+            if (!string.IsNullOrEmpty(message))
                 throw new ArgumentNullException(message);
 
             throw new ArgumentNullException(DefaultMessages.ArgumentWasNull);
         }
-
-        //private static Exception GetException(Func<Exception> customException = null, string message = null)
-        //{
-        //    if (customException != null)
-        //        throw customException.Invoke();
-
-        //    if (!string.IsNullOrEmpty(message))
-        //        throw new ArgumentNullException(message);
-
-        //    throw new ArgumentNullException(DefaultMessages.ArgumentWasNull);
-        //}
 
         //private static Exception GetException(string message, Type type)
         //    => (Exception)Activator.CreateInstance(type, message);
