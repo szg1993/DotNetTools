@@ -1,12 +1,15 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Demo.Exceptions;
 
 try
 {
-
+    Console.WriteLine("Hello, World!");
+    var vmi = new DataValidationException("Szia");
 }
-catch (Exception)
+catch (DataValidationException dve)
 {
 
-	throw;
+}
+catch (Exception e)
+{
+
 }
