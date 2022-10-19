@@ -1,9 +1,15 @@
 ﻿using Demo.Exceptions;
+using ExGuard;
 
 try
 {
     Console.WriteLine("Hello, World!");
-    var vmi = new DataValidationException("Szia");
+
+    var list = new List<string>();
+    list = null;
+
+    list.ThrowIfNull("Sziamia!", typeof(DataValidationException));
+
 }
 catch (DataValidationException dve)
 {
