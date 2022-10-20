@@ -1,10 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace ExGuard
+﻿namespace ExGuard.Utils
 {
-    public static class ExGuard
+    internal static class ExceptionHandler
     {
-        private static Exception GetException(string message = null, Type exceptionType = null)
+        internal static Exception GetException(string message = null, Type exceptionType = null)
         {
             string defaultMessage = "Default message comes here";
 
