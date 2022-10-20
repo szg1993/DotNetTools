@@ -5,22 +5,22 @@ namespace ExGuard.Helpers
 {
     public static class IfNullOrEmpty
     {
-        public static IEnumerable<TValidable> ThrowIfNullOrEmpty<TValidable>([NotNull] this IEnumerable<TValidable> param)
-            => Validate(param, message: null, exceptionType: null);
+        public static IEnumerable<TValidatable> ThrowIfNullOrEmpty<TValidatable>([NotNull] this IEnumerable<TValidatable> validatable)
+            => Validate(validatable, message: null, exceptionType: null);
 
-        public static IEnumerable<TValidable> ThrowIfNullOrEmpty<TValidable>([NotNull] this IEnumerable<TValidable> param, string message)
-            => Validate(param, message: message, exceptionType: null);
+        public static IEnumerable<TValidatable> ThrowIfNullOrEmpty<TValidatable>([NotNull] this IEnumerable<TValidatable> validatable, string message)
+            => Validate(validatable, message: message, exceptionType: null);
 
-        public static IEnumerable<TValidable> ThrowIfNullOrEmpty<TValidable>([NotNull] this IEnumerable<TValidable> param, Type exceptionType)
-            => Validate(param, message: null, exceptionType: exceptionType);
+        public static IEnumerable<TValidatable> ThrowIfNullOrEmpty<TValidatable>([NotNull] this IEnumerable<TValidatable> validatable, Type exceptionType)
+            => Validate(validatable, message: null, exceptionType: exceptionType);
 
-        public static IEnumerable<TValidable> ThrowIfNullOrEmpty<TValidable>([NotNull] this IEnumerable<TValidable> param, string message, Type exceptionType)
-            => Validate(param, message, exceptionType);
+        public static IEnumerable<TValidatable> ThrowIfNullOrEmpty<TValidatable>([NotNull] this IEnumerable<TValidatable> validatable, string message, Type exceptionType)
+            => Validate(validatable, message, exceptionType);
 
-        private static IEnumerable<TValidable> Validate<TValidable>([NotNull] this IEnumerable<TValidable> param, string message, Type exceptionType)
+        private static IEnumerable<TValidatable> Validate<TValidatable>([NotNull] this IEnumerable<TValidatable> validatable, string message, Type exceptionType)
         {
-            if (param != null && param.Any())
-                return param;
+            if (validatable != null && validatable.Any())
+                return validatable;
 
             throw ExceptionHandler.GetException(message: message, exceptionType: exceptionType);
         }
