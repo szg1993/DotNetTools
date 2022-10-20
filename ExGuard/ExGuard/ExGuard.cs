@@ -4,6 +4,11 @@ namespace ExGuard
 {
     public static class ExGuard
     {
+        public static TValidable ThrowIfNull<TValidable>([NotNull] this TValidable param)
+        {
+            return RaiseIfNull(param, message: null, exceptionType: null);
+        }
+
         public static TValidable ThrowIfNull<TValidable>([NotNull] this TValidable param, string message)
         {
             return RaiseIfNull(param, message: message, exceptionType: null);
@@ -22,6 +27,34 @@ namespace ExGuard
         private static TValidable RaiseIfNull<TValidable>([NotNull] this TValidable param, string message, Type exceptionType)
         {
             if (param != null)
+                return param;
+
+            throw GetException(message: message, exceptionType: exceptionType);
+        }
+
+        public static IEnumerable<TValidable> ThrowIfNullOrEmpty<TValidable>([NotNull] this IEnumerable<TValidable> param)
+        {
+            return RaiseIfNullOrEmpty(param, message: null, exceptionType: null);
+        }
+
+        public static IEnumerable<TValidable> ThrowIfNullOrEmpty<TValidable>([NotNull] this IEnumerable<TValidable> param, string message)
+        {
+            return RaiseIfNullOrEmpty(param, message: message, exceptionType: null);
+        }
+
+        public static IEnumerable<TValidable> ThrowIfNullOrEmpty<TValidable>([NotNull] this IEnumerable<TValidable> param, Type exceptionType)
+        {
+            return RaiseIfNullOrEmpty(param, message: null, exceptionType: exceptionType);
+        }
+
+        public static IEnumerable<TValidable> ThrowIfNullOrEmpty<TValidable>([NotNull] this IEnumerable<TValidable> param, string message, Type exceptionType)
+        {
+            return RaiseIfNullOrEmpty(param, message, exceptionType);
+        }
+
+        private static IEnumerable<TValidable> RaiseIfNullOrEmpty<TValidable>([NotNull] this IEnumerable<TValidable> param, string message, Type exceptionType)
+        {
+            if (param != null && param.Any())
                 return param;
 
             throw GetException(message: message, exceptionType: exceptionType);

@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using ExGuard;
 using System.Collections.Generic;
-using Throw;
+//using Throw;
 //using Throw;
 try
 {
@@ -14,10 +14,13 @@ try
     //    .Throw()
     //    .IfNull<ArgumentException>("Hello");
 
+    mylist.ThrowIfNullOrEmpty();
+
     mylist
         .ThrowIfNull()
         .ThrowIfNull(typeof(DataValidationException))
         .ThrowIfNull("Sziamia!", typeof(DataValidationException))
+        .ThrowIfNullOrEmpty("")
         ;
     
     //mylist
