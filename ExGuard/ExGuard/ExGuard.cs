@@ -1,53 +1,91 @@
-﻿using ExGuard.Constants;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace ExGuard
 {
     public static class ExGuard
     {
-        public static TValidable ThrowIfNull<TValidable>([NotNull] this TValidable param, Func<Exception> customException = null, string message = null)
+        public static TValidable ThrowIfNull<TValidable>([NotNull] this TValidable param, string message)
+        {
+            return RaiseIfNull(param, message: message, exceptionType: null);
+        }
+
+        public static TValidable ThrowIfNull<TValidable>([NotNull] this TValidable param, Type exceptionType)
+        {
+            return RaiseIfNull(param, message: null, exceptionType: exceptionType);
+        }
+
+        public static TValidable ThrowIfNull<TValidable>([NotNull] this TValidable param, string message, Type exceptionType)
+        {
+            return RaiseIfNull(param, message, exceptionType);
+        }
+
+        private static TValidable RaiseIfNull<TValidable>([NotNull] this TValidable param, string message, Type exceptionType)
         {
             if (param != null)
                 return param;
 
-            if (customException != null)
-                throw customException.Invoke();
-
-            if (!string.IsNullOrEmpty(message))
-                throw new ArgumentNullException(message);
-
-            throw new ArgumentNullException(DefaultMessages.ArgumentWasNull);
+            throw GetException(message: message, exceptionType: exceptionType);
         }
 
-        public static IEnumerable<TValidable> ThrowIfNullOrEmpty<TValidable>(
-            [NotNull] this IEnumerable<TValidable> param,
-            Func<Exception> customException = null,
-            string message = null)
+        private static Exception GetException(string message = null, Type exceptionType = null)
         {
-            if (param != null && param.Any())
-                return param;
+            string defaultMessage = "Default message comes here";
 
-            //throw GetException();
+            if (!string.IsNullOrEmpty(message) && exceptionType != null)
+                return (Exception)Activator.CreateInstance(exceptionType, message);
 
-            if (customException != null)
-                throw customException.Invoke();
+            if (string.IsNullOrEmpty(message) && exceptionType != null)
+                return (Exception)Activator.CreateInstance(exceptionType, defaultMessage);
 
-            if (!string.IsNullOrEmpty(message))
-                throw new ArgumentException(message);
+            if (!string.IsNullOrEmpty(message) && exceptionType == null)
+                return new ArgumentException(message);
 
-            throw new ArgumentException(DefaultMessages.ArgumentListWasNullOrEmpty);
+            return new ArgumentException(defaultMessage); //Todo: itt is tudjon valami default messaget-t
         }
 
-        private static Exception GetException(Func<Exception> customException = null, string message = null)
-        {
-            if (customException != null)
-                throw customException.Invoke();
+        //public static TValidable ThrowIfNull<TValidable>([NotNull] this TValidable param, Func<Exception> customException = null, string message = null)
+        //{
+        //    if (param != null)
+        //        return param;
 
-            if (!string.IsNullOrEmpty(message))
-                throw new ArgumentNullException(message);
+        //    if (customException != null)
+        //        throw customException.Invoke();
 
-            throw new ArgumentNullException(DefaultMessages.ArgumentWasNull);
-        }
+        //    if (!string.IsNullOrEmpty(message))
+        //        throw new ArgumentNullException(message);
+
+        //    throw new ArgumentNullException(DefaultMessages.ArgumentWasNull);
+        //}
+
+        //public static IEnumerable<TValidable> ThrowIfNullOrEmpty<TValidable>(
+        //    [NotNull] this IEnumerable<TValidable> param,
+        //    Func<Exception> customException = null,
+        //    string message = null)
+        //{
+        //    if (param != null && param.Any())
+        //        return param;
+
+        //    //throw GetException();
+
+        //    if (customException != null)
+        //        throw customException.Invoke();
+
+        //    if (!string.IsNullOrEmpty(message))
+        //        throw new ArgumentException(message);
+
+        //    throw new ArgumentException(DefaultMessages.ArgumentListWasNullOrEmpty);
+        //}
+
+        //private static Exception GetException(Func<Exception> customException = null, string message = null)
+        //{
+        //    if (customException != null)
+        //        throw customException.Invoke();
+
+        //    if (!string.IsNullOrEmpty(message))
+        //        throw new ArgumentNullException(message);
+
+        //    throw new ArgumentNullException(DefaultMessages.ArgumentWasNull);
+        //}
 
         //private static Exception GetException(string message, Type type)
         //    => (Exception)Activator.CreateInstance(type, message);

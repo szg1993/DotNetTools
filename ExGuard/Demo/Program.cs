@@ -1,22 +1,41 @@
 ﻿using Demo.Exceptions;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using ExGuard;
-
+using System.Collections.Generic;
+using Throw;
+//using Throw;
 try
 {
     var mylist = new List<string>();
     mylist = null;
 
-    //list.ThrowIfNull("Sziamia!", typeof(DataValidationException));
+    //mylist
+    //    .Throw()
+    //    .IfNull<ArgumentException>("Hello");
+
     mylist
-        .ThrowIfNull(() => new DataValidationException("csá"))
-        .ThrowIfNull(message: "pot");
+        .ThrowIfNull()
+        .ThrowIfNull(typeof(DataValidationException))
+        .ThrowIfNull("Sziamia!", typeof(DataValidationException))
+        ;
+    
+    //mylist
+    //    .ThrowIfNull(() => new DataValidationException("csá"))
+    //    .ThrowIfNull(message: "pot");
     //.ThrowIfEmpty("");
 
     //int age = 32;
 
     //age.Throw().IfNegative();
+
+
 }
 catch (DataValidationException dve)
+{
+
+}
+catch (ArgumentException e)
 {
 
 }
