@@ -2,6 +2,7 @@
 {
     internal static class ExceptionHandler
     {
+        //TODO: ez legyen ennél sokkal okosabb.
         internal static Exception GetException(string message = null, Type exceptionType = null)
         {
             string defaultMessage = "Default message comes here";

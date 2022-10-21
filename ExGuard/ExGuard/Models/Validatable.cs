@@ -1,10 +1,10 @@
 ﻿namespace ExGuard.Models
 {
-    public class Validable<TValue> : IValidable<TValue>
+    public class Validatable<TValue> : IValidatable<TValue>
     {
         public TValue Value { get; }
 
-        public Validable(TValue value)
+        public Validatable(TValue value)
             => Value = value;  
     }
 }

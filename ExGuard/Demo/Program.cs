@@ -1,4 +1,5 @@
 ﻿using Demo.Exceptions;
+using ExGuard;
 using ExGuard.Helpers;
 //using Throw;
 //using Throw;
@@ -14,17 +15,27 @@ try
     //    .ThrowIfNullOrEmpty()
     //    ;
 
-    int age = 32;
+    //int age = 32;
 
-    age
-        .ThrowIfNull()
-        .ThrowIfGreater(10)
-        .ThrowIfNull("Csá");
+    //age
+    //    .ThrowIfNull()
+    //    .ThrowIfGreater(10)
+    //    .ThrowIfNull("Csá");
 
-    double weight = 40;
+    //double weight = 40;
 
     //string name = "";
     //name.ThrowIfNullOrEmpty();
+
+    var person = new Person("Gábor", 29);
+    //var vmi = person.Throw()
+    //    .ThrowIfNull();
+
+    person
+        .Throw()
+        .IfTrue(x => x.Value.Name == "Gábor");
+
+
 }
 catch (DataValidationException dve)
 {

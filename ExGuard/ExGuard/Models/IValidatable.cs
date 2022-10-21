@@ -1,6 +1,6 @@
 ﻿namespace ExGuard.Models
 {
-    public interface IValidable<TValue>
+    public interface IValidatable<TValue>
     {
         TValue Value { get; }
     }
