@@ -15,13 +15,17 @@ try
     //    .ThrowIfNullOrEmpty()
     //    ;
 
-    int age = 32;
+    int? age = 32;
 
-    age
-        .Throw()
-        .IfNull()
-        .IfGreater(10)
-        .IfNull("Csá");
+    //age
+    //    .Throw()
+    //    .IfNull()
+    //    .IfGreaterThan(10)
+    //    .IfNull("Csá");
+
+    var vmi = age
+    .Throw()
+    .IfGreaterThan(10);
 
     //double weight = 40;
 
