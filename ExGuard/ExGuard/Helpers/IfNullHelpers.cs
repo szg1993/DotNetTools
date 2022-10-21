@@ -6,19 +6,19 @@ namespace ExGuard.Helpers
 {
     public static class IfNullHelpers
     {
-        public static IValidatable<TObject> IfNull<TObject>([NotNull] this IValidatable<TObject> validatable) where TObject : class
+        public static IValidatable<TObject> IfNull<TObject>([NotNull] this IValidatable<TObject> validatable)
             => Validate(validatable, message: null, exceptionType: null);
 
-        public static IValidatable<TObject> IfNull<TObject>([NotNull] this IValidatable<TObject> validatable, string message) where TObject : class
+        public static IValidatable<TObject> IfNull<TObject>([NotNull] this IValidatable<TObject> validatable, string message)
             => Validate(validatable, message: message, exceptionType: null);
 
-        public static IValidatable<TObject> IfNull<TObject>([NotNull] this IValidatable<TObject> validatable, Type exceptionType) where TObject : class
+        public static IValidatable<TObject> IfNull<TObject>([NotNull] this IValidatable<TObject> validatable, Type exceptionType)
             => Validate(validatable, message: null, exceptionType: exceptionType);
 
-        public static IValidatable<TObject> IfNull<TObject>([NotNull] this IValidatable<TObject> validatable, string message, Type exceptionType) where TObject : class
+        public static IValidatable<TObject> IfNull<TObject>([NotNull] this IValidatable<TObject> validatable, string message, Type exceptionType)
             => Validate(validatable, message, exceptionType);
 
-        private static IValidatable<TObject> Validate<TObject>([NotNull] this IValidatable<TObject> validatable, string message, Type exceptionType) where TObject : class
+        private static IValidatable<TObject> Validate<TObject>([NotNull] this IValidatable<TObject> validatable, string message, Type exceptionType)
         {
             if (validatable.Value == null)
                 throw ExceptionHandler.GetException(message: message, exceptionType: exceptionType);

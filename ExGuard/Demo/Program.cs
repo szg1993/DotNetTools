@@ -15,12 +15,13 @@ try
     //    .ThrowIfNullOrEmpty()
     //    ;
 
-    //int age = 32;
+    int age = 32;
 
-    //age
-    //    .ThrowIfNull()
-    //    .ThrowIfGreater(10)
-    //    .ThrowIfNull("Csá");
+    age
+        .Throw()
+        .IfNull()
+        .IfGreater(10)
+        .IfNull("Csá");
 
     //double weight = 40;
 
