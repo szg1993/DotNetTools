@@ -8,35 +8,35 @@ namespace ExGuard.Helpers
     {
         public static IValidatable<TObject> IfTrue<TObject>(
             [NotNull] this IValidatable<TObject> validatable,
-            Func<IValidatable<TObject>, bool> func)
+            Func<TObject, bool> func)
             => Validate(validatable, func: func, message: null, exceptionType: null);
 
         public static IValidatable<TObject> IfTrue<TObject>(
-            [NotNull] this IValidatable<TObject> validatable, 
-            Func<IValidatable<TObject>, bool> func, 
+            [NotNull] this IValidatable<TObject> validatable,
+            Func<TObject, bool> func,
             string message)
             => Validate(validatable, func: func, message: message, exceptionType: null);
 
         public static IValidatable<TObject> IfTrue<TObject>(
             [NotNull] this IValidatable<TObject> validatable,
-            Func<IValidatable<TObject>, bool> func,
+            Func<TObject, bool> func,
             Type exceptionType)
             => Validate(validatable, func: func, message: null, exceptionType: exceptionType);
 
         public static IValidatable<TObject> IfTrue<TObject>(
             [NotNull] this IValidatable<TObject> validatable,
-            Func<IValidatable<TObject>, bool> func,
+            Func<TObject, bool> func,
             string message,
             Type exceptionType)
             => Validate(validatable, func: func, message: message, exceptionType: exceptionType);
 
         private static IValidatable<TObject> Validate<TObject>(
             [NotNull] this IValidatable<TObject> validatable,
-            Func<IValidatable<TObject>, bool> func,
+            Func<TObject, bool> func,
             string message,
             Type exceptionType)
         {
-            if (func.Invoke(validatable))
+            if (func.Invoke(validatable.Value))
                 throw ExceptionHandler.GetException(message: message, exceptionType: exceptionType);
 
             return validatable;

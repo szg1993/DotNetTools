@@ -27,7 +27,8 @@ try
 
     age.Throw()
         .IfGreaterThan(50)
-        .Throw();
+        .IfTrue(x => x == 50)
+        .IfLesserThan(40)
 
     //var vmi = age
     //.Throw()
