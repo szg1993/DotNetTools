@@ -7,5 +7,8 @@ namespace ExGuard.Helpers
     {
         public static IValidatable<TObject> Throw<TObject>([NotNull] this TObject validatable)
             => new Validatable<TObject>(validatable);
+
+        public static IValidatable<TObject> Throw<TObject>([NotNull] this IValidatable<TObject> validatable)
+            => validatable;
     }
 }

@@ -15,7 +15,7 @@ try
     //    .ThrowIfNullOrEmpty()
     //    ;
 
-    int? age = 32;
+    //int? age = 32;
 
     //age
     //    .Throw()
@@ -23,9 +23,16 @@ try
     //    .IfGreaterThan(10)
     //    .IfNull("Csá");
 
-    var vmi = age
-    .Throw()
-    .IfGreaterThan(10);
+    int age = 20;
+
+    age.Throw()
+        .IfGreaterThan(50)
+        .Throw();
+
+    //var vmi = age
+    //.Throw()
+    //.IfGreaterThan(50)
+    //.Throw();
 
     //double weight = 40;
 
@@ -36,9 +43,9 @@ try
     //var vmi = person.Throw()
     //    .ThrowIfNull();
 
-    person
-        .Throw()
-        .IfTrue(x => x.Value.Name == "Gábor");
+    //person
+    //    .Throw()
+    //    .IfTrue(x => x.Value.Name == "Gábor");
 
 
 }
