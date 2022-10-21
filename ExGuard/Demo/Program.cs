@@ -1,54 +1,23 @@
 ﻿using Demo.Exceptions;
 using ExGuard;
 using ExGuard.Helpers;
-//using Throw;
-//using Throw;
+
 try
 {
-    var mylist = new List<string>();
-    mylist = null;
+    //int age = 20;
 
-    //mylist
-    //    .ThrowIfNull()
-    //    .ThrowIfNull(typeof(DataValidationException))
-    //    .ThrowIfNull("Hello!", typeof(DataValidationException))
-    //    .ThrowIfNullOrEmpty()
-    //    ;
+    //age.Throw()
+    //    .IfGreaterThan(50)
+    //    .IfTrue(x => x == 50)
+    //    .IfLesserThan(40);
 
-    //int? age = 32;
+    var gabor = new Person("Gábor", 29);
+    var sandor = new Person("Sándor", 24);
+    var persons = new List<Person> { gabor, sandor };
 
-    //age
-    //    .Throw()
-    //    .IfNull()
-    //    .IfGreaterThan(10)
-    //    .IfNull("Csá");
-
-    int age = 20;
-
-    age.Throw()
-        .IfGreaterThan(50)
-        .IfTrue(x => x == 50)
-        .IfLesserThan(40)
-
-    //var vmi = age
-    //.Throw()
-    //.IfGreaterThan(50)
-    //.Throw();
-
-    //double weight = 40;
-
-    //string name = "";
-    //name.ThrowIfNullOrEmpty();
-
-    var person = new Person("Gábor", 29);
-    //var vmi = person.Throw()
-    //    .ThrowIfNull();
-
-    //person
-    //    .Throw()
-    //    .IfTrue(x => x.Value.Name == "Gábor");
-
-
+    persons
+        .Throw()
+        .IfTrue(x => x.Any(y => y.Name == "Gábor"), message: "Hellóka", exceptionType: typeof(DataValidationException));
 }
 catch (DataValidationException dve)
 {
@@ -62,15 +31,3 @@ catch (Exception e)
 {
 
 }
-
-//public class CustomerValidator : AbstractValidator<Customer>
-//{
-//    public CustomerValidator()
-//    {
-//        RuleFor(x => x.Surname).NotEmpty();
-//        RuleFor(x => x.Forename).NotEmpty().WithMessage("Please specify a first name");
-//        RuleFor(x => x.Discount).NotEqual(0).When(x => x.HasDiscount);
-//        RuleFor(x => x.Address).Length(20, 250);
-//        RuleFor(x => x.Postcode).Must(BeAValidPostcode).WithMessage("Please specify a valid postcode");
-//    }
-//}
