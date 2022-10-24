@@ -1,12 +1,12 @@
 ﻿namespace SmartApiClient.Services
 {
-    public interface IApiServiceBase
+    public interface IApiClient
     {
-        Task<string> PostAsync(
+        Task<bool> PostAsync(
             string url,
             CancellationToken cancellationToken = default);
 
-        Task<string> PostAsync<TObjectToPost>(
+        Task<bool> PostAsync<TObjectToPost>(
             string url,
             TObjectToPost objectToPost,
             CancellationToken cancellationToken = default);
