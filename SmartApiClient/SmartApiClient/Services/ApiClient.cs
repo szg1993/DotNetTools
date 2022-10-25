@@ -196,11 +196,11 @@ namespace SmartApiClient.Services
                     GetHttpRequestMessage(url, httpMethod, requestContent), cancellationToken));
         }
 
-        private HttpRequestMessage GetHttpRequestMessage(string url, HttpMethod httpMethod, object requestContent = null)
+        private HttpRequestMessage GetHttpRequestMessage<TRequestContent>(
+            string url,
+            HttpMethod httpMethod,
+            TRequestContent requestContent)
         {
-            if (requestContent == null)
-                return new HttpRequestMessage(httpMethod, url);
-
             return new HttpRequestMessage(httpMethod, url)
             {
                 Content = new StringContent(
