@@ -8,8 +8,9 @@ namespace SmartApiClient.Services
 {
     public abstract class ApiClient : IApiClient
     {
-        protected HttpClient httpClient;
+        private HttpClient httpClient;
         protected JsonSerializerOptions jsonSerializerOptions;
+        
         protected virtual string DefaultApiCallError
             => "An unexpected error has occured during the server call.";
 
@@ -36,7 +37,6 @@ namespace SmartApiClient.Services
             return DeserializeResponse<TReturn>(
                 await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, HttpMethod.Get, requestContent), cancellationToken));
         }
-
 
         public async Task<bool> PostAsync(
             string url,
@@ -70,6 +70,70 @@ namespace SmartApiClient.Services
                 await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, HttpMethod.Post, requestContent), cancellationToken));
         }
 
+        public async Task<bool> PutAsync(
+            string url,
+            CancellationToken cancellationToken)
+        {
+            return await IsHttpRequestSuccessful(new HttpRequestMessage(HttpMethod.Put, url), cancellationToken);
+        }
+
+        public async Task<bool> PutAsync<TRequestContent>(string url,
+            TRequestContent requestContent,
+            CancellationToken cancellationToken)
+        {
+            return await IsHttpRequestSuccessful(GetHttpRequestMessage(url, HttpMethod.Put, requestContent), cancellationToken);
+        }
+
+        public async Task<TReturn> PutAsync<TReturn>(
+            string url,
+            CancellationToken cancellationToken)
+        {
+            return DeserializeResponse<TReturn>(
+                await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, HttpMethod.Put),
+                cancellationToken));
+        }
+
+        public async Task<TReturn> PutAsync<TReturn, TRequestContent>(
+            string url,
+            TRequestContent requestContent,
+            CancellationToken cancellationToken)
+        {
+            return DeserializeResponse<TReturn>(
+                await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, HttpMethod.Put, requestContent), cancellationToken));
+        }
+
+        public async Task<bool> PatchAsync(
+            string url,
+            CancellationToken cancellationToken)
+        {
+            return await IsHttpRequestSuccessful(new HttpRequestMessage(HttpMethod.Patch, url), cancellationToken);
+        }
+
+        public async Task<bool> PatchAsync<TRequestContent>(string url,
+            TRequestContent requestContent,
+            CancellationToken cancellationToken)
+        {
+            return await IsHttpRequestSuccessful(GetHttpRequestMessage(url, HttpMethod.Patch, requestContent), cancellationToken);
+        }
+
+        public async Task<TReturn> PatchAsync<TReturn>(
+            string url,
+            CancellationToken cancellationToken)
+        {
+            return DeserializeResponse<TReturn>(
+                await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, HttpMethod.Patch),
+                cancellationToken));
+        }
+
+        public async Task<TReturn> PatchAsync<TReturn, TRequestContent>(
+            string url,
+            TRequestContent requestContent,
+            CancellationToken cancellationToken)
+        {
+            return DeserializeResponse<TReturn>(
+                await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, HttpMethod.Patch, requestContent), cancellationToken));
+        }
+
         #endregion
 
         #region ProtectedMembers
@@ -83,6 +147,12 @@ namespace SmartApiClient.Services
             }
             .Uri;
 
+        protected virtual void SetHttpClient(IHttpClientFactory httpClientFactory)
+        {
+            httpClient = httpClientFactory.CreateClient();
+            httpClient.BaseAddress = SetBaseUrl();
+        }
+
         protected virtual JsonSerializerOptions GetJsonSerializerOptions()
             => new()
             {
@@ -95,12 +165,6 @@ namespace SmartApiClient.Services
         #endregion
 
         #region PrivateMethods
-
-        private void SetHttpClient(IHttpClientFactory httpClientFactory)
-        {
-            httpClient = httpClientFactory.CreateClient();
-            httpClient.BaseAddress = SetBaseUrl();
-        }
 
         private HttpRequestMessage GetHttpRequestMessage(string url, HttpMethod httpMethod, object requestContent = null)
         {
