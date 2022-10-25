@@ -2,22 +2,31 @@
 {
     public interface IApiClient
     {
+        Task<TReturn> GetAsync<TReturn>(
+            string url,
+            CancellationToken cancellationToken = default);
+
+        Task<TReturn> GetAsync<TReturn, TRequestContent>(
+            string url,
+            TRequestContent requestContent,
+            CancellationToken cancellationToken = default);
+
         Task<bool> PostAsync(
             string url,
             CancellationToken cancellationToken = default);
 
-        Task<bool> PostAsync<TObjectToPost>(
+        Task<bool> PostAsync<TRequestContent>(
             string url,
-            TObjectToPost objectToPost,
+            TRequestContent requestContent,
             CancellationToken cancellationToken = default);
 
-        Task<TReturnObject> PostAsync<TReturnObject>(
+        Task<TReturn> PostAsync<TReturn>(
             string url,
             CancellationToken cancellationToken = default);
 
-        Task<TReturnObject> PostAsync<TReturnObject, TObjectToPost>(
+        Task<TReturn> PostAsync<TReturn, TRequestContent>(
             string url,
-            TObjectToPost objectToPost,
+            TRequestContent requestContent,
             CancellationToken cancellationToken = default);
     }
 }
