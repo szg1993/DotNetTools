@@ -8,30 +8,35 @@ namespace ExGuard.Helpers
     {
         public static IValidatable<TObject> IfFalse<TObject>(
             [NotNull] this IValidatable<TObject> validatable,
-            Func<TObject, bool> func) 
-            where TObject : class
-            => Validate(validatable, func: func, message: null, exceptionType: null);
+            Func<TObject, bool> func) where TObject : class
+        {
+            return Validate(validatable, func: func, message: null, exceptionType: null);
+        }
 
         public static IValidatable<TObject> IfFalse<TObject>(
             [NotNull] this IValidatable<TObject> validatable, 
             Func<TObject, bool> func, 
-            string message) 
-            where TObject : class
-            => Validate(validatable, func: func, message: message, exceptionType: null);
+            string message) where TObject : class
+        {
+            return Validate(validatable, func: func, message: message, exceptionType: null);
+        }
 
         public static IValidatable<TObject> IfFalse<TObject>(
             [NotNull] this IValidatable<TObject> validatable,
             Func<TObject, bool> func,
-            Type exceptionType)
-            where TObject : class
-            => Validate(validatable, func: func, message: null, exceptionType: exceptionType);
+            Type exceptionType) where TObject : class
+        {
+            return Validate(validatable, func: func, message: null, exceptionType: exceptionType);
+        }
 
         public static IValidatable<TObject> IfFalse<TObject>(
             [NotNull] this IValidatable<TObject> validatable,
             Func<TObject, bool> func,
             string message,
             Type exceptionType) where TObject : class
-            => Validate(validatable, func: func, message: message, exceptionType: exceptionType);
+        {
+            return Validate(validatable, func: func, message: message, exceptionType: exceptionType);
+        }
 
         private static IValidatable<TObject> Validate<TObject>(
             [NotNull] this IValidatable<TObject> validatable,

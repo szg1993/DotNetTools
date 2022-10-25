@@ -1,4 +1,4 @@
-﻿namespace ExGuard
+﻿namespace Demo.Models
 {
     public class Person
     {
@@ -6,13 +6,13 @@
 
         public int Age { get; set; }
 
-        public List<string> Childs { get; set; }
+        public List<string> ChildNames { get; set; }
 
         public Person(string name, int age)
         {
             Name = name;
             Age = age;
-            Childs = new List<string>() { "Töhötöm", "Orália" };
+            ChildNames = new List<string>() { "Alexander", "Jessica" };
         }
     }
 }

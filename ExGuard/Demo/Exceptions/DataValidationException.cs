@@ -6,7 +6,6 @@ namespace Demo.Exceptions
     {
         public DataValidationException(string message) 
             : base(message, StatusCodes.Status400BadRequest)
-        {
-        }
+        { }
     }
 }
