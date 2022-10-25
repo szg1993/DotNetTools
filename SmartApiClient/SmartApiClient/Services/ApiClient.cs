@@ -1,10 +1,8 @@
 ﻿using SmartApiClient.Exceptions;
-using System.Net.Http;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
-using System.Threading;
 
 namespace SmartApiClient.Services
 {
@@ -20,37 +18,41 @@ namespace SmartApiClient.Services
             SetHttpClient(httpClientFactory);
         }
 
+        #region PublicMembers
+
         public async Task<bool> PostAsync(
             string url,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
-            return await GetHttpResponseMessage1(new HttpRequestMessage(HttpMethod.Post, url), cancellationToken);
+            return await IsHttpRequestSuccessful(new HttpRequestMessage(HttpMethod.Post, url), cancellationToken);
         }
 
         public async Task<bool> PostAsync<TObjectToPost>(string url,
             TObjectToPost objectToPost,
             CancellationToken cancellationToken)
         {
-            return await GetHttpResponseMessage1(GetHttpRequestMessage(url, objectToPost), cancellationToken);
+            return await IsHttpRequestSuccessful(GetHttpRequestMessage(url, objectToPost), cancellationToken);
         }
 
         public async Task<TReturnObject> PostAsync<TReturnObject>(
             string url,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             return DeserializeResponse<TReturnObject>(
-                await GetHttpResponseMessage(GetHttpRequestMessage(url),
+                await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url),
                 cancellationToken));
         }
 
         public async Task<TReturnObject> PostAsync<TReturnObject, TObjectToPost>(
             string url,
             TObjectToPost objectToPost,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             return DeserializeResponse<TReturnObject>(
-                await GetHttpResponseMessage(GetHttpRequestMessage(url, objectToPost), cancellationToken));
+                await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, objectToPost), cancellationToken));
         }
+
+        #endregion
 
         #region ProtectedMembers
 
@@ -96,47 +98,40 @@ namespace SmartApiClient.Services
             };
         }
 
-        private async Task<bool> GetHttpResponseMessage1(
+        private async Task<bool> IsHttpRequestSuccessful(
             HttpRequestMessage httpRequestMessage,
             CancellationToken cancellationToken)
         {
-            var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage, cancellationToken);        
-
-            if (!httpResponseMessage.IsSuccessStatusCode)
-                throw new ApiClientException(await GetErrorMessageAsync(httpResponseMessage, cancellationToken));
-
-            return true;
+            return (await httpClient.SendAsync(httpRequestMessage, cancellationToken)).IsSuccessStatusCode;
         }
 
-        private async Task<string> GetHttpResponseMessage(
+        private async Task<string> GetHttpResponseMessageContentAsync(
             HttpRequestMessage httpRequestMessage,
             CancellationToken cancellationToken)
         {
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage, cancellationToken);
 
-            if (!httpResponseMessage.IsSuccessStatusCode)
-                throw new ApiClientException(await GetErrorMessageAsync(httpResponseMessage, cancellationToken));
+            string responseMessageContent = await httpResponseMessage.Content.ReadAsStringAsync(cancellationToken);
 
-            return await httpResponseMessage.Content.ReadAsStringAsync(cancellationToken);
+            if (!httpResponseMessage.IsSuccessStatusCode)
+                throw new ApiClientException(GetErrorMessage(responseMessageContent));
+
+            return responseMessageContent;
         }
 
-        private TReturnObject DeserializeResponse<TReturnObject>(string responseMessage)
+        private TReturnObject DeserializeResponse<TReturnObject>(string responseMessageContent)
         {
-            return !string.IsNullOrWhiteSpace(responseMessage)
-                ? JsonSerializer.Deserialize<TReturnObject>(responseMessage)
+            return !string.IsNullOrWhiteSpace(responseMessageContent)
+                ? JsonSerializer.Deserialize<TReturnObject>(responseMessageContent)
                 : default;
         }
 
-        private async Task<string> GetErrorMessageAsync(
-            HttpResponseMessage httpResponseMessage,
-            CancellationToken cancellationToken)
+        private string GetErrorMessage(string responseMessageContent)
         {
-            string responseMessage = await httpResponseMessage.Content.ReadAsStringAsync(cancellationToken);
-
-            if (string.IsNullOrEmpty(responseMessage))
+            if (string.IsNullOrEmpty(responseMessageContent))
                 return DefaultApiCallError;
 
-            return responseMessage;
+            return responseMessageContent;
         }
 
         #endregion
