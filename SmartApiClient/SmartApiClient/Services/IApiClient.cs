@@ -64,5 +64,23 @@
             string url,
             TRequestContent requestContent,
             CancellationToken cancellationToken = default);
+
+        Task<bool> DeleteAsync(
+            string url,
+            CancellationToken cancellationToken = default);
+
+        Task<bool> DeleteAsync<TRequestContent>(
+            string url,
+            TRequestContent requestContent,
+            CancellationToken cancellationToken = default);
+
+        Task<TReturn> DeleteAsync<TReturn>(
+            string url,
+            CancellationToken cancellationToken = default);
+
+        Task<TReturn> DeleteAsync<TReturn, TRequestContent>(
+            string url,
+            TRequestContent requestContent,
+            CancellationToken cancellationToken = default);
     }
 }

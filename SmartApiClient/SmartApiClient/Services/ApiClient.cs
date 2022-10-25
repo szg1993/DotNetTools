@@ -9,7 +9,6 @@ namespace SmartApiClient.Services
     public abstract class ApiClient : IApiClient
     {
         private HttpClient httpClient;
-        protected JsonSerializerOptions jsonSerializerOptions;
 
         protected virtual string DefaultApiCallError
             => "An unexpected error has occured during the server call.";
@@ -121,6 +120,35 @@ namespace SmartApiClient.Services
             CancellationToken cancellationToken)
         {
             return await GetReturnObjectAsync<TReturn>(url, HttpMethod.Patch, cancellationToken, requestContent);
+        }
+
+        public async Task<bool> DeleteAsync(
+            string url,
+            CancellationToken cancellationToken)
+        {
+            return await IsHttpRequestSuccessfulAsync(new HttpRequestMessage(HttpMethod.Delete, url), cancellationToken);
+        }
+
+        public async Task<bool> DeleteAsync<TRequestContent>(string url,
+            TRequestContent requestContent,
+            CancellationToken cancellationToken)
+        {
+            return await IsHttpRequestSuccessfulAsync(GetHttpRequestMessage(url, HttpMethod.Delete, requestContent), cancellationToken);
+        }
+
+        public async Task<TReturn> DeleteAsync<TReturn>(
+            string url,
+            CancellationToken cancellationToken)
+        {
+            return await GetReturnObjectAsync<TReturn>(url, HttpMethod.Delete, cancellationToken);
+        }
+
+        public async Task<TReturn> DeleteAsync<TReturn, TRequestContent>(
+            string url,
+            TRequestContent requestContent,
+            CancellationToken cancellationToken)
+        {
+            return await GetReturnObjectAsync<TReturn>(url, HttpMethod.Delete, cancellationToken, requestContent);
         }
 
         #endregion
