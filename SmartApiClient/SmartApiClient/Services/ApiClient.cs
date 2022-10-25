@@ -10,7 +10,7 @@ namespace SmartApiClient.Services
     {
         private HttpClient httpClient;
         protected JsonSerializerOptions jsonSerializerOptions;
-        
+
         protected virtual string DefaultApiCallError
             => "An unexpected error has occured during the server call.";
 
@@ -19,14 +19,13 @@ namespace SmartApiClient.Services
             SetHttpClient(httpClientFactory);
         }
 
-        #region PublicMembers
+        #region Public
 
         public async Task<TReturn> GetAsync<TReturn>(
             string url,
             CancellationToken cancellationToken = default)
         {
-            return DeserializeResponse<TReturn>(
-                await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, HttpMethod.Get), cancellationToken));
+            return await GetReturnObjectAsync<TReturn>(url, HttpMethod.Get, cancellationToken);
         }
 
         public async Task<TReturn> GetAsync<TReturn, TRequestContent>(
@@ -34,31 +33,28 @@ namespace SmartApiClient.Services
             TRequestContent requestContent,
             CancellationToken cancellationToken = default)
         {
-            return DeserializeResponse<TReturn>(
-                await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, HttpMethod.Get, requestContent), cancellationToken));
+            return await GetReturnObjectAsync<TReturn>(url, HttpMethod.Get, cancellationToken, requestContent);
         }
 
         public async Task<bool> PostAsync(
             string url,
             CancellationToken cancellationToken)
         {
-            return await IsHttpRequestSuccessful(new HttpRequestMessage(HttpMethod.Post, url), cancellationToken);
+            return await IsHttpRequestSuccessfulAsync(new HttpRequestMessage(HttpMethod.Post, url), cancellationToken);
         }
 
         public async Task<bool> PostAsync<TRequestContent>(string url,
             TRequestContent requestContent,
             CancellationToken cancellationToken)
         {
-            return await IsHttpRequestSuccessful(GetHttpRequestMessage(url, HttpMethod.Post, requestContent), cancellationToken);
+            return await IsHttpRequestSuccessfulAsync(GetHttpRequestMessage(url, HttpMethod.Post, requestContent), cancellationToken);
         }
 
         public async Task<TReturn> PostAsync<TReturn>(
             string url,
             CancellationToken cancellationToken)
         {
-            return DeserializeResponse<TReturn>(
-                await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, HttpMethod.Post),
-                cancellationToken));
+            return await GetReturnObjectAsync<TReturn>(url, HttpMethod.Post, cancellationToken);
         }
 
         public async Task<TReturn> PostAsync<TReturn, TRequestContent>(
@@ -66,31 +62,28 @@ namespace SmartApiClient.Services
             TRequestContent requestContent,
             CancellationToken cancellationToken)
         {
-            return DeserializeResponse<TReturn>(
-                await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, HttpMethod.Post, requestContent), cancellationToken));
+            return await GetReturnObjectAsync<TReturn>(url, HttpMethod.Post, cancellationToken, requestContent);
         }
 
         public async Task<bool> PutAsync(
             string url,
             CancellationToken cancellationToken)
         {
-            return await IsHttpRequestSuccessful(new HttpRequestMessage(HttpMethod.Put, url), cancellationToken);
+            return await IsHttpRequestSuccessfulAsync(new HttpRequestMessage(HttpMethod.Put, url), cancellationToken);
         }
 
         public async Task<bool> PutAsync<TRequestContent>(string url,
             TRequestContent requestContent,
             CancellationToken cancellationToken)
         {
-            return await IsHttpRequestSuccessful(GetHttpRequestMessage(url, HttpMethod.Put, requestContent), cancellationToken);
+            return await IsHttpRequestSuccessfulAsync(GetHttpRequestMessage(url, HttpMethod.Put, requestContent), cancellationToken);
         }
 
         public async Task<TReturn> PutAsync<TReturn>(
             string url,
             CancellationToken cancellationToken)
         {
-            return DeserializeResponse<TReturn>(
-                await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, HttpMethod.Put),
-                cancellationToken));
+            return await GetReturnObjectAsync<TReturn>(url, HttpMethod.Put, cancellationToken);
         }
 
         public async Task<TReturn> PutAsync<TReturn, TRequestContent>(
@@ -98,31 +91,28 @@ namespace SmartApiClient.Services
             TRequestContent requestContent,
             CancellationToken cancellationToken)
         {
-            return DeserializeResponse<TReturn>(
-                await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, HttpMethod.Put, requestContent), cancellationToken));
+            return await GetReturnObjectAsync<TReturn>(url, HttpMethod.Put, cancellationToken, requestContent);
         }
 
         public async Task<bool> PatchAsync(
             string url,
             CancellationToken cancellationToken)
         {
-            return await IsHttpRequestSuccessful(new HttpRequestMessage(HttpMethod.Patch, url), cancellationToken);
+            return await IsHttpRequestSuccessfulAsync(new HttpRequestMessage(HttpMethod.Patch, url), cancellationToken);
         }
 
         public async Task<bool> PatchAsync<TRequestContent>(string url,
             TRequestContent requestContent,
             CancellationToken cancellationToken)
         {
-            return await IsHttpRequestSuccessful(GetHttpRequestMessage(url, HttpMethod.Patch, requestContent), cancellationToken);
+            return await IsHttpRequestSuccessfulAsync(GetHttpRequestMessage(url, HttpMethod.Patch, requestContent), cancellationToken);
         }
 
         public async Task<TReturn> PatchAsync<TReturn>(
             string url,
             CancellationToken cancellationToken)
         {
-            return DeserializeResponse<TReturn>(
-                await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, HttpMethod.Patch),
-                cancellationToken));
+            return await GetReturnObjectAsync<TReturn>(url, HttpMethod.Patch, cancellationToken);
         }
 
         public async Task<TReturn> PatchAsync<TReturn, TRequestContent>(
@@ -130,13 +120,12 @@ namespace SmartApiClient.Services
             TRequestContent requestContent,
             CancellationToken cancellationToken)
         {
-            return DeserializeResponse<TReturn>(
-                await GetHttpResponseMessageContentAsync(GetHttpRequestMessage(url, HttpMethod.Patch, requestContent), cancellationToken));
+            return await GetReturnObjectAsync<TReturn>(url, HttpMethod.Patch, cancellationToken, requestContent);
         }
 
         #endregion
 
-        #region ProtectedMembers
+        #region Protected
 
         protected virtual Uri SetBaseUrl()
             => new UriBuilder
@@ -154,17 +143,30 @@ namespace SmartApiClient.Services
         }
 
         protected virtual JsonSerializerOptions GetJsonSerializerOptions()
-            => new()
+        {
+            return new()
             {
                 PropertyNameCaseInsensitive = true,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
                 WriteIndented = true
             };
+        }
 
         #endregion
 
-        #region PrivateMethods
+        #region Private
+
+        private async Task<TReturn> GetReturnObjectAsync<TReturn>(
+            string url,
+            HttpMethod httpMethod,
+            CancellationToken cancellationToken,
+            object requestContent = null)
+        {
+            return DeserializeResponse<TReturn>(
+                await GetHttpResponseContentAsync(
+                    GetHttpRequestMessage(url, httpMethod, requestContent), cancellationToken));
+        }
 
         private HttpRequestMessage GetHttpRequestMessage(string url, HttpMethod httpMethod, object requestContent = null)
         {
@@ -180,14 +182,14 @@ namespace SmartApiClient.Services
             };
         }
 
-        private async Task<bool> IsHttpRequestSuccessful(
+        private async Task<bool> IsHttpRequestSuccessfulAsync(
             HttpRequestMessage httpRequestMessage,
             CancellationToken cancellationToken)
         {
             return (await httpClient.SendAsync(httpRequestMessage, cancellationToken)).IsSuccessStatusCode;
         }
 
-        private async Task<string> GetHttpResponseMessageContentAsync(
+        private async Task<string> GetHttpResponseContentAsync(
             HttpRequestMessage httpRequestMessage,
             CancellationToken cancellationToken)
         {
@@ -201,10 +203,10 @@ namespace SmartApiClient.Services
             return responseMessageContent;
         }
 
-        private TReturnObject DeserializeResponse<TReturnObject>(string responseMessageContent)
+        private TReturn DeserializeResponse<TReturn>(string responseMessageContent)
         {
             return !string.IsNullOrWhiteSpace(responseMessageContent)
-                ? JsonSerializer.Deserialize<TReturnObject>(responseMessageContent)
+                ? JsonSerializer.Deserialize<TReturn>(responseMessageContent)
                 : default;
         }
 
