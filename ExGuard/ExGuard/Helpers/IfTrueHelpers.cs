@@ -45,7 +45,7 @@ namespace ExGuard.Helpers
             Type exceptionType)
         {
             if (func.Invoke(validatable.Value))
-                throw ExceptionHandler.GetException(message: message, exceptionType: exceptionType);
+                throw ExceptionHandler.GetException(message: message, customExceptionType: exceptionType);
 
             return validatable;
         }

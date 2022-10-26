@@ -21,7 +21,7 @@ namespace ExGuard.Helpers
         private static IValidatable<TObject> Validate<TObject>([NotNull] this IValidatable<TObject> validatable, string message, Type exceptionType)
         {
             if (validatable.Value == null)
-                throw ExceptionHandler.GetException(message: message, exceptionType: exceptionType);
+                throw ExceptionHandler.GetException(message: message, customExceptionType: exceptionType);
             
             return validatable;
         }

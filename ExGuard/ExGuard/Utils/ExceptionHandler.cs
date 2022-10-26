@@ -2,21 +2,20 @@
 {
     internal static class ExceptionHandler
     {
-        //TODO: ez legyen ennél sokkal okosabb.
-        internal static Exception GetException(string message = null, Type exceptionType = null)
+        internal static Exception GetException(string message = null, Type customExceptionType = null)
         {
-            string defaultMessage = "Default message comes here";
+            if (!string.IsNullOrEmpty(message) && customExceptionType != null)
+                return (Exception)Activator.CreateInstance(customExceptionType, message);
 
-            if (!string.IsNullOrEmpty(message) && exceptionType != null)
-                return (Exception)Activator.CreateInstance(exceptionType, message);
-
-            if (string.IsNullOrEmpty(message) && exceptionType != null)
-                return (Exception)Activator.CreateInstance(exceptionType, defaultMessage);
-
-            if (!string.IsNullOrEmpty(message) && exceptionType == null)
+            if (!string.IsNullOrEmpty(message) && customExceptionType == null)
                 return new ArgumentException(message);
+            
+            string defaultMessage = "This is a default message for the exception.";
+            
+            if (string.IsNullOrEmpty(message) && customExceptionType != null)
+                return (Exception)Activator.CreateInstance(customExceptionType, defaultMessage);
 
-            return new ArgumentException(defaultMessage); //Todo: itt is tudjon valami default messaget-t
+            return new ArgumentException(defaultMessage);
         }
     }
 }

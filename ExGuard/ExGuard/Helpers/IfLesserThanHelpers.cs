@@ -81,7 +81,7 @@ namespace ExGuard.Helpers
         private static IValidatable<int> ValidateInt([NotNull] this IValidatable<int> validatable, int limit, string message, Type exceptionType)
         {
             if (validatable.Value < limit)
-                throw ExceptionHandler.GetException(message: message, exceptionType: exceptionType);
+                throw ExceptionHandler.GetException(message: message, customExceptionType: exceptionType);
 
             return validatable;
         }
@@ -89,7 +89,7 @@ namespace ExGuard.Helpers
         private static IValidatable<double> ValidateDouble([NotNull] this IValidatable<double> validatable, double limit, string message, Type exceptionType)
         {
             if (validatable.Value < limit)
-                throw ExceptionHandler.GetException(message: message, exceptionType: exceptionType);
+                throw ExceptionHandler.GetException(message: message, customExceptionType: exceptionType);
             
             return validatable;
         }
@@ -97,7 +97,7 @@ namespace ExGuard.Helpers
         private static IValidatable<float> ValidateFloat([NotNull] this IValidatable<float> validatable, float limit, string message, Type exceptionType)
         {
             if (validatable.Value < limit)
-                throw ExceptionHandler.GetException(message: message, exceptionType: exceptionType);
+                throw ExceptionHandler.GetException(message: message, customExceptionType: exceptionType);
 
             return validatable;
         }
@@ -105,7 +105,7 @@ namespace ExGuard.Helpers
         private static IValidatable<int?> ValidateNullableInt([NotNull] this IValidatable<int?> validatable, int limit, string message, Type exceptionType)
         {
             if (validatable.Value != null && validatable.Value < limit)
-                throw ExceptionHandler.GetException(message: message, exceptionType: exceptionType);
+                throw ExceptionHandler.GetException(message: message, customExceptionType: exceptionType);
 
             return validatable;
         }
@@ -113,7 +113,7 @@ namespace ExGuard.Helpers
         private static IValidatable<double?> ValidateNullableDouble([NotNull] this IValidatable<double?> validatable, double limit, string message, Type exceptionType)
         {
             if (validatable.Value != null && validatable.Value < limit)
-                throw ExceptionHandler.GetException(message: message, exceptionType: exceptionType);
+                throw ExceptionHandler.GetException(message: message, customExceptionType: exceptionType);
 
             return validatable;
         }
@@ -121,7 +121,7 @@ namespace ExGuard.Helpers
         private static IValidatable<float?> ValidateNullableFloat([NotNull] this IValidatable<float?> validatable, float limit, string message, Type exceptionType)
         {
             if (validatable.Value != null && validatable.Value < limit)
-                throw ExceptionHandler.GetException(message: message, exceptionType: exceptionType);
+                throw ExceptionHandler.GetException(message: message, customExceptionType: exceptionType);
 
             return validatable;
         }
